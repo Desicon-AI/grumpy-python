@@ -61,7 +61,10 @@ class SealClient:
             print(f"Seal.ai initialized for {self.app_name} ({self.environment}). We are watching you.")
 
     def _get_headers(self, payload_str=None):
-        headers = {"X-API-Key": self.api_key}
+        headers = {
+            "X-API-Key": self.api_key,
+            "User-Agent": "Seal-Python-SDK/1.0.3"
+        }
         if payload_str and self.signing_secret:
             timestamp = str(int(time.time()))
             msg = f"{timestamp}.{payload_str}".encode('utf-8')
