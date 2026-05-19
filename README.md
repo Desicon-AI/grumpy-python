@@ -1,23 +1,30 @@
-# Grumpy Python Setup Documentation
+# Seal Python SDK Setup Documentation
 
 ## 1. Quick Start
 
 ### Step 1: Install the SDK
 ```bash
-pip install desicon-grumpy
+pip install desicon-seal
 ```
 
-### Step 2: Initialize Grumpy
-```python
-from grumpy_ai import grumpy
+### Step 2: Initialize Seal & Add ASGI Middleware
+For modern Python frameworks (FastAPI, Starlette, Django 3.0+), you can easily add the Edge-equivalent WAF to your application using the `SealASGIMiddleware`.
 
-grumpy.init(
+```python
+from fastapi import FastAPI
+from seal import seal
+
+app = FastAPI()
+
+# 1. Initialize Telemetry & SRE
+seal.init(
     api_key="grp_live_xxxx",   # From your dashboard
-    app_name="My App",
-    environment="production",  # "production" | "staging" | "development"
-    rescue_engine=True,        # Automatically apply AI hotfixes
-    level="error"              # "fatal" | "error" | "warning"
+    app_name="My FastAPI App",
+    environment="production"
 )
+
+# 2. Add the WAF Middleware to protect your API
+app.add_middleware(seal.asgi_middleware())
 ```
 
 ## 2. Configuration Options
@@ -151,7 +158,7 @@ grumpy.init(
     api_key="sandbox_YOUR_KEY",
     app_name="Test App",
     environment="development",
-    endpoint="https://grumpyengine.desicon.ai/api/v1/sandbox/ingest"
+    endpoint="https://sealengine.desicon.ai/api/v1/sandbox/ingest"
 )
 ```
 

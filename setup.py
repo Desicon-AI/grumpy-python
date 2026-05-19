@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="desicon-grumpy",
-    version="1.0.4",
-    author="Desicon Platform",
-    author_email="hello@desicon.ai",
-    description="Zero-config AI SRE companion that aggressively roasts your crashes.",
+    name="desicon-seal",
+    version="1.0.2",
+    author="Seal Enterprise Security",
+    author_email="hello@circle-sure.com",
+    description="Zero-latency App-Layer WAF, Automated SRE Logging, and AI Rescue Engine.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Desicon-AI/grumpy-python",
+    url="https://github.com/Desicon-AI/seal-python",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
