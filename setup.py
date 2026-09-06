@@ -11,7 +11,7 @@ setup(
     description="Zero-latency App-Layer WAF, Automated SRE Logging, and AI Rescue Engine.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Desicon-AI/seal-python",
+    url="https://github.com/Desicon-AI/grumpy-python",
     options={"build": {"build_base": "build-seal"}},
     packages=find_packages(include=["seal", "seal.*"]),
     classifiers=[

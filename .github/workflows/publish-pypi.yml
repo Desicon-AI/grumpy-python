@@ -1,0 +1,44 @@
+name: Publish Python package
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the tested distributions to PyPI
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: pypi-package-release
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests build twine
+      - run: python -B -m unittest discover -s tests -v
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-package
+          path: dist/desicon_seal-*
+          if-no-files-found: error
+  publish:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-package
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
