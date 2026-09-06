@@ -5,14 +5,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="desicon-seal",
-    version="1.0.3",
+    version="1.0.5",
     author="Seal Enterprise Security",
     author_email="hello@circle-sure.com",
     description="Zero-latency App-Layer WAF, Automated SRE Logging, and AI Rescue Engine.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Desicon-AI/seal-python",
-    packages=find_packages(),
+    options={"build": {"build_base": "build-seal"}},
+    packages=find_packages(include=["seal", "seal.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
