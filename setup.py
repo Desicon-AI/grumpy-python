@@ -6,8 +6,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="desicon-seal",
     version="1.0.5",
-    author="Seal Enterprise Security",
-    author_email="hello@circle-sure.com",
+    author="Desicon",
+    author_email="support+seal@desicon.ai",
     description="Zero-latency App-Layer WAF, Automated SRE Logging, and AI Rescue Engine.",
     long_description=long_description,
     long_description_content_type="text/markdown",

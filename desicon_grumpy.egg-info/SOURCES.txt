@@ -1,9 +1,0 @@
-README.md
-setup.py
-desicon_grumpy.egg-info/PKG-INFO
-desicon_grumpy.egg-info/SOURCES.txt
-desicon_grumpy.egg-info/dependency_links.txt
-desicon_grumpy.egg-info/requires.txt
-desicon_grumpy.egg-info/top_level.txt
-grumpy_ai/__init__.py
-grumpy_ai/client.py

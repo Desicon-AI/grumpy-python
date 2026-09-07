@@ -1,9 +1,0 @@
-README.md
-setup.py
-grumpy_ai/__init__.py
-grumpy_ai/client.py
-grumpy_ai.egg-info/PKG-INFO
-grumpy_ai.egg-info/SOURCES.txt
-grumpy_ai.egg-info/dependency_links.txt
-grumpy_ai.egg-info/requires.txt
-grumpy_ai.egg-info/top_level.txt
