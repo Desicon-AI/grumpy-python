@@ -13,8 +13,8 @@ jobs:
       - run: pip install requests build
       - run: python -B -m unittest discover -s tests -v
       - run: python -m build
-      - run: python -c "from zipfile import ZipFile; z=ZipFile('dist/desicon_seal-1.0.5-py3-none-any.whl'); assert 'seal/__init__.py' in z.namelist(); assert not any(n.startswith('grumpy_ai/') for n in z.namelist())"
+      - run: python -c "from zipfile import ZipFile; z=ZipFile('dist/desicon_seal-1.0.6-py3-none-any.whl'); assert 'seal/__init__.py' in z.namelist(); assert not any(n.startswith('grumpy_ai/') for n in z.namelist())"
       - uses: actions/upload-artifact@v4
         with:
           name: seal-python-candidate
-          path: dist/desicon_seal-1.0.5*
+          path: dist/desicon_seal-1.0.6*
