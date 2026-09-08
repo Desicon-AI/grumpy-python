@@ -37,7 +37,10 @@ class SealClient:
             "trustProxyHeaders": False,
             "methodTampering": { "action": "report" },
             "payloadOverflow": { "maxPayloadSize": 5242880, "action": "report" },
-            "pathTraversal": { "action": "drop" }
+            "pathTraversal": { "action": "drop" },
+            "honeypot": {"action": "report"},
+            "sqli": {"action": "report"},
+            "xss": {"action": "report"}
         }
         if waf:
             # Deep update
@@ -296,18 +299,26 @@ class SealASGIMiddleware:
 
         # 1. Honeypot check
         if path in self.HONEYPOTS:
-            self.seal._report_threat("HONEYPOT_ACCESS", client_ip, scope)
+            action = waf_cfg.get("honeypot", {}).get("action", "report")
+            self.seal._report_threat("HONEYPOT_ACCESS", client_ip, scope, {"action": "blocked" if action == "drop" else "observed"})
+            if action == "drop":
+                return await self._send_rejection(send, 403, "Access denied by configured path policy")
 
         # 2. WAF Legacy URL Check
         is_threat = False
         threat_type = ""
-        if self.SQLI_REGEX.search(full_url):
+        from urllib.parse import unquote
+        inspected_url = unquote(full_url)
+        if self.SQLI_REGEX.search(inspected_url):
             is_threat, threat_type = True, "SQL_INJECTION"
-        elif self.XSS_REGEX.search(full_url):
+        elif self.XSS_REGEX.search(inspected_url):
             is_threat, threat_type = True, "XSS_ATTACK"
 
         if is_threat:
-            self.seal._report_threat(threat_type, client_ip, scope)
+            action = waf_cfg.get("sqli" if threat_type == "SQL_INJECTION" else "xss", {}).get("action", "report")
+            self.seal._report_threat(threat_type, client_ip, scope, {"action": "blocked" if action == "drop" else "observed"})
+            if action == "drop":
+                return await self._send_rejection(send, 403, "Request rejected by configured application policy")
 
         # 3. 401/403 Sliding Window Tracker
         async def send_wrapper(message):

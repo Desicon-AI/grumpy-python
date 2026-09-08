@@ -18,3 +18,7 @@ Application WAF rules use explicit `action: report` or `action: drop`. Scanner s
 Threat telemetry contains approved request metadata and a path hash. It omits credentials, cookies, arbitrary headers, raw URLs, query strings and request bodies. Error reports still include exception messages, stack traces and surrounding source context; avoid placing secrets in those values. This SDK reports crashes and WAF signals; it does not execute AI-generated Python or JavaScript patches.
 
 Run `python -m unittest discover -s tests -v`. Build from a clean checkout with `python -m build`; verify that the wheel contains `seal/__init__.py` and `seal/client.py` before release.
+
+## Optional enforcement rules
+
+The `honeypot`, `sqli`, and `xss` rules accept an `action` of `drop` or `report`. They default to `report`: upgrading does not silently block new classes of traffic. Enable each rule after testing legitimate application workflows. `drop` rejects matching requests and records `action: blocked`; observation mode records `observed`. Honeypot paths include WordPress login/admin paths and must not be blocked on sites that legitimately use those paths. Historical records are not reclassified.

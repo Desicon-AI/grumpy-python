@@ -94,4 +94,20 @@ class SDKTests(unittest.TestCase):
             self.assertEqual(self.client._original_excepthook,original)
         finally: sys.excepthook=original
 
+    def test_explicit_rules_block_and_report_the_same_outcome(self):
+        async def exercise():
+            for rule,path,query,kind in [('honeypot','/.env',b'', 'HONEYPOT_ACCESS'),('sqli','/search',b'q=UNION%20SELECT','SQL_INJECTION'),('xss','/search',b'q=%3Cscript%3Ealert(1)%3C/script%3E','XSS_ATTACK')]:
+                for action in ('drop','report'):
+                    messages=[]
+                    async def app(scope,receive,send): await send({'type':'http.response.start','status':200})
+                    async def receive(): return {'type':'http.request','body':b''}
+                    async def send(message): messages.append(message)
+                    middleware=SealASGIMiddleware(app);middleware.seal=self.client;self.client.waf_config={rule:{'action':action}}
+                    with patch.object(self.client,'_report_threat') as report:
+                        await middleware({'type':'http','method':'GET','path':path,'query_string':query,'headers':[],'client':('127.0.0.1',1)},receive,send)
+                        self.assertEqual(messages[0]['status'],403 if action=='drop' else 200)
+                        self.assertEqual(report.call_args.args[0],kind)
+                        self.assertEqual(report.call_args.args[3]['action'],'blocked' if action=='drop' else 'observed')
+        asyncio.run(exercise())
+
 if __name__=='__main__': unittest.main()
